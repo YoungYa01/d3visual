@@ -18,9 +18,7 @@ const HomePage = () => {
   
   const [provence, setProvence] = useState(null);
   
-  const handleProvienceClick = (pro) => {
-    setProvence(pro)
-  }
+  const handleProvienceClick = (pro) => setProvence(pro)
   
   
   useEffect(() => {

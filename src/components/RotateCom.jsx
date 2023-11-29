@@ -116,7 +116,7 @@ const RotateCom = () => {
   }
   
   useEffect(() => {
-    d3.csv("public/data/StockInformation.csv").then(function (csvData) {
+    d3.csv("./data/StockInformation.csv").then(function (csvData) {
       // 在数据加载完成后调用创建图表的函数
       createChart(csvData);
     });

@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import {useEffect, useState} from "react";
-import './geo.css'
 import {Button, Dropdown} from "tdesign-react";
+import './geo.css'
 
 const ChinaGeo = (props) => {
   
@@ -16,7 +16,7 @@ const ChinaGeo = (props) => {
   const innerHeight = 450 - margin.top - margin.bottom
   
   useEffect(() => {
-    d3.json('/public/data/china.geojson')
+    d3.json('./data/china.geojson')
       .then(data => {
         console.log(data);
         setChinaData(data);
@@ -51,7 +51,7 @@ const ChinaGeo = (props) => {
       .on("zoom", zoomed);
     
     svg.on('dblclick', () => {
-      d3.json('/public/data/china.geojson')
+      d3.json('./data/china.geojson')
         .then(data => {
           drawGeo(data);
         })
@@ -100,7 +100,7 @@ const ChinaGeo = (props) => {
       })
       .on('click', (e, d) => {
         provienceClick(d.properties.name)
-        d3.json(`/public/data/province/${d.properties.name}.geojson`)
+        d3.json(`./data/province/${d.properties.name}.geojson`)
           .then((mapData) => {
             remove();
             drawGeo(mapData);

@@ -130,7 +130,7 @@ const ChinaMap = () => {
   
   
   useEffect(() => {
-    d3.json('/public/data/china.geojson')
+    d3.json('./data/china.geojson')
       .then((data) => {
         const height = document.getElementById('mapview').clientHeight
         const width = document.getElementById('mapview').clientWidth

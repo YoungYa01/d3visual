@@ -1,7 +1,7 @@
 .ticketContainer{
     position: relative;
     border: 1px solid rgba(25, 186, 139, 0.17);
-    background: url(public/images/line.png) rgba(255, 255, 255, 0.03);
+    background: url('./images/line.png') rgba(255, 255, 255, 0.03);
     text-indent: -3em;
 }
 

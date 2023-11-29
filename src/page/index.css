@@ -5,14 +5,14 @@
 
 .layout{
     min-height: 100vh;
-    background: url(public/images/bg.jpg) no-repeat top center;
+    background: url("./images/bg.jpg") no-repeat top center;
     position: relative;
 }
 
 .header{
     position: relative;
     height: 8vh;
-    background: url(public/images/head_bg.png) no-repeat;
+    background: url("./images/head_bg.png") no-repeat;
     background-size: 100% 100%;
     text-align: center;
     font-size: 28px;
@@ -39,7 +39,7 @@
 
 @font-face {
     font-family: electronicFont;
-    src: url(public/font/DS-DIGIT.TTF);
+    src: url("./font/DS-DIGIT.TTF");
 }
 
 

@@ -8,6 +8,8 @@ const WordCloud = () => {
   
   const [type, setType] = useState("maxPrice")
   const [data, setData] = useState([]);
+  
+  let timer = null;
   const remove = () => {
     d3.select("#word_cloud svg").remove();
   }
@@ -33,14 +35,17 @@ const WordCloud = () => {
     function draw(words) {
       remove();
       
-      d3.select("#word_cloud").append("svg")
+      const wordCloud = d3.select("#word_cloud").append("svg")
         .attr("width", layout.size()[0])
         .attr("height", layout.size()[1])
         .append("g")
         .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-        .selectAll("text")
+      
+      wordCloud.selectAll("text")
         .data(words)
         .enter().append("text")
+        // .transition(d3.transition(d3.scaleLinear()).duration(2000))
+        .transition(d3.transition(eval(animations[Math.random() * animations.length - 1])).duration(1500))
         .style("font-size", function (d) {
           return d.size + "px";
         })
@@ -56,8 +61,14 @@ const WordCloud = () => {
     }
   }
   
+  const animations = ['easeLinear', 'easePolyIn', 'easePolyOut', 'easePolyInOut', 'easeQuad', 'easeQuadIn', 'easeQuadOut',
+    'easeQuadInOut', 'easeCubic', 'easeCubicIn', 'easeCubicOut', 'easeCubicInOut', 'easeSin', 'easeSinIn', 'easeSinOut', 'easeSinInOut',
+    'easeExp', 'easeExpIn', 'easeExpOut', 'easeExpInOut', 'easeCircle', 'easeCircleIn', 'easeCircleOut', 'easeCircleInOut', 'easeElastic',
+    'easeElasticIn', 'easeElasticOut', 'easeElasticInOut', 'easeBack', 'easeBackIn', 'easeBackOut', 'easeBackInOut',
+    'easeBounce', 'easeBounceIn', 'easeBounceOut', 'easeBounceInOut']
+  
   useEffect(() => {
-    d3.csv('public/data/StockInformation.csv')
+    d3.csv('./data/StockInformation.csv')
       .then((data) => {
         const groupData = d3.groups(data, d => d.shortName);
         console.log(groupData);
@@ -71,10 +82,15 @@ const WordCloud = () => {
         });
         console.log("wordData", wordData);
         render(wordData);
+        clearInterval(timer);
+        timer = setInterval(() => {
+          render(wordData);
+        }, 5000)
       })
   }, [])
   
   useEffect(() => {
+    clearInterval(timer);
     const wordData = [];
     data.forEach(([name, arrayData]) => {
       wordData.push({
@@ -83,6 +99,9 @@ const WordCloud = () => {
       })
     });
     render(wordData);
+    timer = setInterval(() => {
+      render(wordData);
+    }, 5000)
   }, [type])
   
   

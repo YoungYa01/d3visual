@@ -4,9 +4,35 @@ import 'd3-time'
 import {useEffect, useState} from "react";
 import BorderCom from "./BorderCom.jsx";
 
+
+const gen = () => {
+  let instance = void 0;
+  return () => {
+    if (!instance) {
+      instance = d3.select(self.document.body)
+        .append('div')
+        .classed("tooltip", true)
+        .style('position', 'absolute')
+        .style('z-index', '100000')
+        .style('color', '#ff7f0e')
+        .style('visibility', 'hidden')   // 一开始设置为不可见
+        .style('text-anchor', 'middle')
+        .style('font-size', '20px')
+        .style('border', 'solid #acacac 1px')
+        .style('padding', '10px 20px')
+        .style('background', '#fff')
+        .style('border-radius', '10px')
+        .text('123213');
+    }
+    return instance;
+  }
+}
+const tooltip = gen()
+
+
 const TicketCount = ({showProvence}) => {
-  const width = 928;
-  const height = 600;
+  const width = 400;
+  const height = 300;
   const marginTop = 20;
   const marginRight = 30;
   const marginBottom = 30;
@@ -18,6 +44,7 @@ const TicketCount = ({showProvence}) => {
   useEffect(() => {
     drawGraph(ticketData.filter(item => item.province === showProvence));
   }, [showProvence])
+  
   
   const drawGraph = (ticker) => {
     remove();
@@ -61,7 +88,7 @@ const TicketCount = ({showProvence}) => {
     // Create a group for each day of data, and append two lines to it.
     const g = svg.append("g")
       .attr("stroke-linecap", "round")
-      .attr("stroke", "black")
+      .attr("stroke", "#fff")
       .selectAll("g")
       .data(ticker)
       .join("g")
@@ -70,28 +97,62 @@ const TicketCount = ({showProvence}) => {
       });
     
     g.append("line")
+      .transition(d3.transition(d3.easeLinear))
       .attr("y1", d => y(d.LowestPrice))
-      .attr("y2", d => y(d.maxPrice));
+      .transition(d3.transition(d3.easeLinear))
+      .attr("y2", d => y(d.maxPrice))
+    g.attr("stroke", "#5c9696")
+      .on('mousemove', (e, d) => {
+        tooltip().style('visibility', 'visible')
+          .style('left', `${e.pageX + 10 + 'px'}`)
+          .style('top', `${e.pageY + 25 + 'px'}`)
+          .html(`${d?.dateTime}<br>
+                        Open: ${formatValue(d.openPrice)}<br>
+                        Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})<br>
+                        Low: ${formatValue(d.LowestPrice)}<br>
+                        High: ${formatValue(d.maxPrice)}`)
+      })
+      .on('mouseleave', (e) => {
+        d3.selectAll('.tooltip')
+          .style('visibility', 'hidden')
+      })
     
     g.append("line")
+      .transition(d3.transition(d3.easeLinear))
       .attr("y1", d => y(d.openPrice))
+      .transition(d3.transition(d3.easeLinear))
       .attr("y2", d => y(d.closePrice))
-      .attr("stroke-width", 2)
+    g.attr("stroke-width", 2)
       .attr("stroke", d => d.openPrice > d.closePrice ? d3.schemeSet1[0]
         : d.closePrice > d.openPrice ? d3.schemeSet1[2]
-          : d3.schemeSet1[8]);
+          : d3.schemeSet1[8])
+      .on('mousemove', (e, d) => {
+        tooltip().style('visibility', 'visible')
+          .style('left', `${e.pageX + 10 + 'px'}`)
+          .style('top', `${e.pageY + 25 + 'px'}`)
+          .html(`${d?.dateTime}<br>
+                        Open: ${formatValue(d.openPrice)}<br>
+                        Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})<br>
+                        Low: ${formatValue(d.LowestPrice)}<br>
+                        High: ${formatValue(d.maxPrice)}`)
+        
+      })
+      .on('mouseleave', (e) => {
+        d3.selectAll('.tooltip')
+          .style('visibility', 'hidden')
+      })
     
     // Append a title (tooltip).
     const formatDate = d3.utcFormat("%B %-d, %Y");
     const formatValue = d3.format(".2f");
     const formatChange = ((f) => (y0, y1) => f((y1 - y0) / y0))(d3.format("+.2%"));
     
-    g.append("title")
-      .text(d => `${formatDate(d?.dateTime)}
-                        Open: ${formatValue(d.openPrice)}
-                        Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})
-                        Low: ${formatValue(d.LowestPrice)}
-                        High: ${formatValue(d.maxPrice)}`);
+    // g.append("title")
+    //   .text(d => `${d?.dateTime}
+    //                     Open: ${formatValue(d.openPrice)}
+    //                     Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})
+    //                     Low: ${formatValue(d.LowestPrice)}
+    //                     High: ${formatValue(d.maxPrice)}`);
     
     return svg.node();
     
@@ -103,7 +164,7 @@ const TicketCount = ({showProvence}) => {
   
   
   useEffect(() => {
-    d3.csv('public/data/StockInformation.csv')
+    d3.csv('./data/StockInformation.csv')
       .then((data) => {
         setTicketData(data)
         drawGraph(data.slice(-150));
@@ -111,9 +172,9 @@ const TicketCount = ({showProvence}) => {
   }, [])
   return (
     <BorderCom>
-      <div style={{color:'#02a6b5'}}>示范性代表公司</div>
+      <div style={{color: '#02a6b5'}}>示范性代表公司K线图</div>
       <div id="stockGraph" style={{color: '#fff'}}></div>
-      <div style={{color:'#02a6b5'}}>{firmName}股票趋势</div>
+      <div style={{color: '#02a6b5'}}>{firmName}股票趋势</div>
     </BorderCom>
   )
 }

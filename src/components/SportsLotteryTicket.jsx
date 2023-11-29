@@ -187,7 +187,7 @@ function SportsLotteryTicket() {
   }
   
   useEffect(() => {
-    d3.csv('/public/data/Lottery_Powerball_Winning_Numbers__Beginning_2010.csv')
+    d3.csv('./data/Lottery_Powerball_Winning_Numbers__Beginning_2010.csv')
       .then((dataset) => {
         setData(dataset);
         handleDraw(dataset);
