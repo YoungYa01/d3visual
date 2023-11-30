@@ -13,7 +13,7 @@ const RotateCom = () => {
   function createChart(data) {
     // 设置图表的宽度和高度
     svgWidth = 425;
-    svgHeight = 400;
+    svgHeight = 800;
     
     // 创建SVG容器
     let svg = d3.select("#chart")
@@ -22,7 +22,7 @@ const RotateCom = () => {
     
     // 创建矩形并绑定数据
     let rects = svg.selectAll("rect")
-      .data(data.slice(0, 8)) // 只使用前6条数据
+      .data(data.slice(0, 18)) // 只使用前6条数据
       .enter()
       .append("rect")
       .attr("y", function (d, i) {
@@ -49,7 +49,7 @@ const RotateCom = () => {
     
     // 在每个矩形上附加文本
     let texts = svg.selectAll("text")
-      .data(data.slice(0, 8))
+      .data(data.slice(0, 18))
       .enter()
       .append("text")
       .text(function (d) {
@@ -124,7 +124,7 @@ const RotateCom = () => {
   
   return (
     <BorderCom>
-      <svg height="295px" width="1300px" id="chart" style={{margin:20}}></svg>
+      <svg height="295px" width="1300px" id="chart" style={{marginLeft:30,marginTop:20}}></svg>
     </BorderCom>
   )
 }
