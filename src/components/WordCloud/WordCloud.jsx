@@ -1,21 +1,33 @@
 import * as d3 from 'd3'
 import {useEffect, useState} from "react";
-import BorderCom from "./BorderCom.jsx";
+import BorderCom from "../BorderCom/BorderCom.jsx";
 import cloud from 'd3.layout.cloud'
 import {Button, Dropdown} from "tdesign-react";
 
+/**
+ * 词云
+ * @return {JSX.Element}
+ * @constructor
+ */
 const WordCloud = () => {
   
   const [type, setType] = useState("maxPrice")
   const [data, setData] = useState([]);
   
   let timer = null;
+  /**
+   * 移除
+   */
   const remove = () => {
     d3.select("#word_cloud svg").remove();
   }
   
   const fill = d3.scaleOrdinal(d3.schemeCategory10)
   
+  /**
+   * 先计算后绘制
+   * @param words
+   */
   const render = (words) => {
     const layout = cloud()
       .size([400, 350])
@@ -31,7 +43,11 @@ const WordCloud = () => {
       .on("end", draw);
     
     layout.start();
-    
+  
+    /**
+     * 绘图
+     * @param words
+     */
     function draw(words) {
       remove();
       
@@ -44,7 +60,6 @@ const WordCloud = () => {
       wordCloud.selectAll("text")
         .data(words)
         .enter().append("text")
-        // .transition(d3.transition(d3.scaleLinear()).duration(2000))
         .transition(d3.transition(eval(animations[Math.random() * animations.length - 1])).duration(1500))
         .style("font-size", function (d) {
           return d.size + "px";
@@ -60,7 +75,10 @@ const WordCloud = () => {
         });
     }
   }
-  
+  /**
+   * 动画数组
+   * @type {string[]}
+   */
   const animations = ['easeLinear', 'easePolyIn', 'easePolyOut', 'easePolyInOut', 'easeQuad', 'easeQuadIn', 'easeQuadOut',
     'easeQuadInOut', 'easeCubic', 'easeCubicIn', 'easeCubicOut', 'easeCubicInOut', 'easeSin', 'easeSinIn', 'easeSinOut', 'easeSinInOut',
     'easeExp', 'easeExpIn', 'easeExpOut', 'easeExpInOut', 'easeCircle', 'easeCircleIn', 'easeCircleOut', 'easeCircleInOut', 'easeElastic',

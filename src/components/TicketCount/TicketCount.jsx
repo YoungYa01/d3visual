@@ -2,9 +2,12 @@ import * as d3 from 'd3'
 import 'd3-legend';
 import 'd3-time'
 import {useEffect, useState} from "react";
-import BorderCom from "./BorderCom.jsx";
+import BorderCom from "../BorderCom/BorderCom.jsx";
 
-
+/**
+ * 闭包创建tootip
+ * @return {function(): *}
+ */
 const gen = () => {
   let instance = void 0;
   return () => {
@@ -29,7 +32,12 @@ const gen = () => {
 }
 const tooltip = gen()
 
-
+/**
+ * K线图
+ * @param showProvence
+ * @return {JSX.Element}
+ * @constructor
+ */
 const TicketCount = ({showProvence}) => {
   const width = 400;
   const height = 300;
@@ -45,7 +53,11 @@ const TicketCount = ({showProvence}) => {
     drawGraph(ticketData.filter(item => item.province === showProvence));
   }, [showProvence])
   
-  
+  /**
+   * 绘图
+   * @param ticker
+   * @return {SVGSVGElement}
+   */
   const drawGraph = (ticker) => {
     remove();
     setFirmName(ticker[0]?.shortName)
@@ -143,21 +155,13 @@ const TicketCount = ({showProvence}) => {
       })
     
     // Append a title (tooltip).
-    const formatDate = d3.utcFormat("%B %-d, %Y");
     const formatValue = d3.format(".2f");
     const formatChange = ((f) => (y0, y1) => f((y1 - y0) / y0))(d3.format("+.2%"));
-    
-    // g.append("title")
-    //   .text(d => `${d?.dateTime}
-    //                     Open: ${formatValue(d.openPrice)}
-    //                     Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})
-    //                     Low: ${formatValue(d.LowestPrice)}
-    //                     High: ${formatValue(d.maxPrice)}`);
-    
     return svg.node();
-    
   }
-  
+  /**
+   * 移除
+   */
   const remove = () => {
     d3.select("#stockGraph svg").remove();
   }

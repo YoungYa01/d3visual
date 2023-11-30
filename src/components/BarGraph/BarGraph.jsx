@@ -1,3 +1,12 @@
+import * as d3 from 'd3';
+import BorderCom from "../BorderCom/BorderCom.jsx";
+
+import {useEffect} from "react";
+
+/**
+ * 闭包函数创建tooltip
+ * @return {function(): *}
+ */
 const gen = () => {
   let instance = void 0;
   return () => {
@@ -22,78 +31,93 @@ const gen = () => {
 }
 const handle = gen()
 
-import * as d3 from 'd3';
-import BorderCom from "./BorderCom.jsx";
-
-import {useEffect} from "react";
-
+/**
+ * 柱状图
+ * @return {JSX.Element}
+ * @constructor
+ */
 const BarGraph = () => {
   
   // 全局变量
   let data;
-  let svgWidth, svgHeight;
+  let svgWidth = 400, svgHeight = 380;
   let intervalId = null; // 用于存储更新的定时器ID
   let currentRectCount = 0;
-  let rectHeight = 20;
+  let rectHeight = 14;
   let rectMargin = 1;
   
-  
-  // const tooltip = createToolTip();
-  // console.log('e')
-  // 创建图表的函数
+  /**
+   * 创建图表的函数
+   */
   function createChart() {
     // 确定图表的宽度和高度
-    svgWidth = 400;
-    svgHeight = 380;
+    const xAxis = d3.axisLeft(d3.scaleBand(data.map(d => d.shortName), [0, svgHeight]))
     
+    const yAxis = d3.axisBottom(d3.scaleLinear([d3.min(data, d => d.openPrice), d3.max(data, d => d.openPrice)], [0, svgHeight]))
     // 选择SVG元素并设置其宽度和高度
-    d3.select("#bar_chart")
+    const chart = d3.select("#bar_chart")
       .attr("width", svgWidth)
       .attr("height", svgHeight)
       .style('margin', 20)
     
+    
+    chart.append('g')
+      .style('transform', 'translate(60px, -30px)')
+      .call(xAxis)
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.4)
+    
+    chart.append('g')
+      .style('transform', `translate(90px, ${svgHeight - 20}px)`)
+      .call(yAxis)
+      .attr('stroke', '#d3d8f0')
+      .select('path').remove();
     // 更新矩形
     updateData();
   }
   
-  // 多个元素用到相同的动画过渡方式，定义一个统一的transition
-  const transition = d3.transition().duration(1000).ease(d3.easeLinear)
-
-// 更新数据的函数
+  /**
+   * 更新数据的函数
+   */
   function updateData() {
     // 计算下一组数据的起始索引和结束索引
     const startIndex = currentRectCount;
-    const endIndex = startIndex + 17; // 每秒更新17个数据
-    // console.log(startIndex, endIndex);
+    const endIndex = startIndex + 26; // 每秒更新17个数据
     
     const newData = data.slice(startIndex, endIndex);
-    // console.log(newData);
-    // 清除现有的矩形
-    // d3.select("#bar_chart").selectAll("rect").remove();
+    
+    d3.select('.bar_title').remove();
+    
+    d3.select("#bar_chart")
+      .append('g')
+      .classed('bar_title', true)
+      .style('transform', `translate(0, ${svgHeight}px)`)
+      .append('text')
+      .classed("bar_title", true)
+      .text(newData[0].dateTime)
+      .attr('color', "#02a6b5")
+      .attr('stroke', "#02a6b5")
     
     // 创建矩形并添加动画效果
     const rectangles = d3.select("#bar_chart").selectAll("rect")
       .data(newData)
       // .enter()
       .join("rect")
-      .attr("x", 0)
-      .attr("y", (d, i) => i * (rectHeight + rectMargin))
+      .attr("x", 80)
+      .attr("y", (d, i) => i * (rectHeight + rectMargin) - 50)
     rectangles.transition(d3.transition(d3.easeLinear).duration(1000))
       .attr("width", d => +d.maxPrice * 10) // 初始宽度为0
       .attr("height", rectHeight)
       .attr("fill", "steelblue")
     rectangles.on("mousemove", (e, d) => {
-      // 鼠标覆盖时显示shortName
-      // d3.select(e.target)
-        // .append("title")
-        // .text(d.shortName + ' 开盘价 ' + d.openPrice + ' 最高价 ' + d.maxPrice);
+      // 鼠标覆盖时显
       handle().style('visibility', 'visible')
         .style('left', `${e.pageX + 10 + 'px'}`)
         .style('top', `${e.pageY + 25 + 'px'}`).text("234345324")
         .text(d.shortName + ' 开盘价 ' + d.openPrice + ' 最高价 ' + d.maxPrice);
     })
       .on("mouseout", function () {
-        // 鼠标移开时移除shortName
+        // 鼠标移开时移除
         d3.selectAll(".tooltip")
           .style('visibility', 'hidden')
       });
@@ -104,7 +128,6 @@ const BarGraph = () => {
       currentRectCount = 0;
   }
   
-  
   useEffect(() => {
     // 异步加载数据
     d3.csv("./data/StockInformation.csv").then(function (csvData) {
@@ -113,7 +136,7 @@ const BarGraph = () => {
         return d3.ascending(a.dateTime, b.dateTime);
       });
       // 在数据加载完成后调用创建图表的函数
-      // clearInterval(intervalId);
+      clearInterval(intervalId);
       createChart();
       // 设置定时器，每秒更新数据
       intervalId = setInterval(updateData, 3000);

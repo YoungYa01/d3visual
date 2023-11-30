@@ -3,9 +3,13 @@ import {useEffect, useState} from "react";
 import {Button, Dropdown} from "tdesign-react";
 import './geo.css'
 
-const ChinaGeo = (props) => {
-  
-  const {provienceClick} = props;
+/**
+ * 中华人名共和国地图组件
+ * @param provienceClick
+ * @return {JSX.Element}
+ * @constructor
+ */
+const ChinaGeo = ({provienceClick}) => {
   
   const [geoProjection, setGeoProjection] = useState(`d3.geoMercator()`);
   
@@ -24,12 +28,18 @@ const ChinaGeo = (props) => {
       })
   }, [])
   
+  /**
+   * 移除
+   */
   const remove = () => {
     d3.selectAll('#mapView path').remove();
     d3.select('.tooltip').remove();
   }
   
-  
+  /**
+   * 绘制地图
+   * @param data
+   */
   const drawGeo = (data) => {
     remove();
     
@@ -108,21 +118,19 @@ const ChinaGeo = (props) => {
       })
   }
   
+  /**
+   *
+   * @return {*}
+   */
   const geoProjectionChange = () => eval(geoProjection)
     .center([95, 45]) //设置地图中心位置
     .scale(500) //设置缩放比例
     .translate([innerWidth / 2, innerHeight / 2]) //地图中心放置位置
   
-  
-  const randomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-  
+  /**
+   * 创建tooltip
+   * @return {Selection<ElementTagNameMap[string], unknown, HTMLElement, any>}
+   */
   const createToolTip = () => {
     return d3.select('body')
       .append('div')
@@ -139,7 +147,10 @@ const ChinaGeo = (props) => {
       .style('border-radius', '10px')
       .text('123213');
   }
-  
+  /**
+   * 改变选中
+   * @param v
+   */
   const handleSelectChange = (v) => {
     setGeoProjection(v.value)
     drawGeo(chinaData);

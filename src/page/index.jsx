@@ -1,17 +1,19 @@
 import React, {useEffect, useState} from "react";
-import SportsLotteryTicket from "../components/SportsLotteryTicket.jsx";
-import ChinaGeo from "../components/Geo.jsx";
+import ChinaGeo from "../components/Geo/Geo.jsx";
 import {Col, Layout, Row} from "tdesign-react";
-import TicketCount from "../components/TicketCount.jsx";
-import WordCloud from "../components/WordCloud.jsx";
-import BGSvg from "../components/BGSvg.jsx";
-
+import TicketCount from "../components/TicketCount/TicketCount.jsx";
+import WordCloud from "../components/WordCloud/WordCloud.jsx";
+import BGSvg from "../components/BGSvg/BGSvg.jsx";
+import BarGraph from "../components/BarGraph/BarGraph.jsx";
+import AreaChart from "../components/AreaChart/index.jsx";
 import './index.css';
-import RotateCom from "../components/RotateCom.jsx";
-import BarGraph from "../components/BarGraph.jsx";
 
 const {Header, Content, Footer} = Layout;
-
+/**
+ * 主页
+ * @return {JSX.Element}
+ * @constructor
+ */
 const HomePage = () => {
   
   const [dateNow, setDateNow] = useState(new Date());
@@ -49,7 +51,8 @@ const HomePage = () => {
             </Col>
             <Col span={3} style={{marginLeft: 135}}>
               <WordCloud/>
-              <RotateCom/>
+              {/*<RotateCom/>*/}
+              <AreaChart showProvence={provence}/>
             </Col>
           
           </Row>

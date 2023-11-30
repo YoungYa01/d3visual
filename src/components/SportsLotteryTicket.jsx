@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {useEffect, useState} from "react";
-import BorderCom from "./BorderCom.jsx";
+import BorderCom from "./BorderCom/BorderCom.jsx";
 
 /**
  * App 根组件
