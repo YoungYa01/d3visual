@@ -23,6 +23,34 @@ const AreaChart = ({showProvence}) => {
    */
   function stackArea(stackData) {
     remove();
+    const legend = d3.select("#area_chart")
+      .selectAll("rect")
+      .data(['最高价', '收盘价', '开盘价', '最低价'])
+      .enter()
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", function (d, i) {
+        return "translate(-30," + (i * 20 + 30) + ")";
+      })
+    
+    legend.append("rect")
+      .attr("x", maxWidth - 25) //width是svg的宽度，x属性用来调整位置
+      // .attr("x", (width / 160) * 157)
+      //或者可以用width的分数来表示，更稳定一些，这是我试出来的，下面同
+      .attr("y", 8)
+      .attr("width", 40)
+      .attr("height", 40) //设低一些就是线，高一些就是面，很好理解
+      .attr("fill", (d, i) => colorArray[i % colorArray.length]);
+
+
+//绘制图例文字
+    legend.append("text")
+      .attr("x", maxWidth - 30)
+      .attr("y", 15)
+      .style("text-anchor", "end") //样式对齐
+      .style("color", (d, i) => colorArray[(3 - i) % colorArray.length])
+      .html(d => ' ' + d)
+    
     
     const stack = d3.stack()
       .keys(['maxPrice', 'closePrice', 'openPrice', 'LowestPrice']);
@@ -105,7 +133,7 @@ const AreaChart = ({showProvence}) => {
   
   return (
     <BorderCom>
-      <div id="area_chart" style={{paddingLeft:40}}></div>
+      <div id="area_chart" style={{paddingLeft: 40}}></div>
     </BorderCom>
   )
   

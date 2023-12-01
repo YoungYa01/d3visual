@@ -79,7 +79,7 @@ const TicketCount = ({showProvence}) => {
     
     // Append the axes.
     svg.append("g")
-      .attr("transform", `translate(0,${height - marginBottom})`)
+      .attr("transform", `translate(0,${height - marginBottom-100})`)
       .call(d3.axisBottom(x)
         .tickValues(d3.utcMonday
           .every(width > 720 ? 1 : 2)
@@ -171,7 +171,7 @@ const TicketCount = ({showProvence}) => {
     d3.csv('./data/StockInformation.csv')
       .then((data) => {
         setTicketData(data)
-        drawGraph(data.slice(-150));
+        drawGraph(data.filter(item => item.province === "北京"));
       })
   }, [])
   return (

@@ -1,8 +1,41 @@
-# React + Vite
+# 省代表公司股价动态分析
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 项目介绍
 
-Currently, two official plugins are available:
+（1）根据全国各地的代表公司股票数据，分析数据的独特性，并绘制多种不同类型的图表，包括条形图、区域图、词云图、K线图和全国地图，以展示数据的多样性和趋势。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+（2）显示准确全地图，对于各省份的详细地图在点击对应省份实现。并且点击后在K线图和区域图上实现交互。
+
+（3）K线图。在全地图上显示准确的地理信息，并提供详细的各省份地图，通过点击相应的省份实现交互功能。在与地图交互的同时，将相关数据呈现在K线图上，以便更好地理解和分析股票走势。
+
+（4）区域图。利用区域图展示某个特定时间段内股价的变化情况，通过面积的大小来反映股价的涨跌幅度，从而更直观地观察和比较不同公司的股价走势。
+
+（5）条形图。使用动态的条形图来展示每个公司随着时间推移的变化情况，特别是最高股价的变动情况，以便更清晰地了解不同公司的股价表现和潜在投资机会。
+
+（6）词云图。获取数据信息，按数据的比重突出显示。
+
+（7）最后根据这些图表信息分析得出股票价值与地区分布的关系。
+
+## 项目运行
+
+首先安装依赖项
+
+```shell
+npm install
+# or
+yarn install
+```
+
+然后运行即可
+
+```shell
+npm run dev
+# or
+yarn dev
+```
+
+本地访问
+
+```
+http://localhost:5173
+```

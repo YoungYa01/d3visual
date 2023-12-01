@@ -89,7 +89,6 @@ const WordCloud = () => {
     d3.csv('./data/StockInformation.csv')
       .then((data) => {
         const groupData = d3.groups(data, d => d.shortName);
-        console.log(groupData);
         setData(groupData);
         const wordData = [];
         groupData.forEach(([name, arrayData]) => {
@@ -98,7 +97,6 @@ const WordCloud = () => {
             size: arrayData[arrayData.length - 1].maxPrice
           })
         });
-        console.log("wordData", wordData);
         render(wordData);
         clearInterval(timer);
         timer = setInterval(() => {

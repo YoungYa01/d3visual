@@ -1,6 +1,11 @@
 * {
     padding: 0;
     margin: 0;
+    user-select: none;
+}
+
+*::-webkit-scrollbar{
+    display: none;
 }
 
 .layout {
@@ -44,6 +49,33 @@
 .t-drawer__header {
     color: #d2d6e4;
     background: #061a74;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.col1 {
+    flex: 1;
+}
+
+.col2 {
+    flex: 2;
+    width: 900px;
+}
+
+.col3 {
+    flex: 1;
 }
 
 @font-face {

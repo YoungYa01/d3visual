@@ -13,7 +13,7 @@ const ChinaGeo = ({provienceClick}) => {
   
   const [geoProjection, setGeoProjection] = useState(`d3.geoMercator()`);
   
-  const [chinaData, setChinaData] = useState(null);
+  const [chinaData, setChinaData] = useState([]);
   
   const margin = {top: 100, left: 100, bottom: 100, right: 100}
   const innerWidth = 600 - margin.left - margin.right
@@ -22,11 +22,18 @@ const ChinaGeo = ({provienceClick}) => {
   useEffect(() => {
     d3.json('./data/china.geojson')
       .then(data => {
-        console.log(data);
         setChinaData(data);
         drawGeo(data);
       })
   }, [])
+  
+  useEffect(() => {
+    d3.json('./data/china.geojson')
+      .then(data => {
+        setChinaData(data);
+        drawGeo(data);
+      })
+  }, [geoProjection])
   
   /**
    * 移除
@@ -46,7 +53,7 @@ const ChinaGeo = ({provienceClick}) => {
     const svg = d3.select('#mapView');
     
     svg.attr('width', 900)
-      .attr('height', 800)
+      .attr('height', 600)
     
     
     //设置地图投影方式
@@ -85,7 +92,7 @@ const ChinaGeo = ({provienceClick}) => {
     const tooltip = createToolTip();
     
     svg.selectAll('path')
-      .data(data.features || data.geometry) //加载数据，一定要打开JSON文件看结构，然后决定加载那个层次数据
+      .data(data?.features || data?.geometry) //加载数据，一定要打开JSON文件看结构，然后决定加载那个层次数据
       .enter()
       .append('path')
       .attr('d', path)
@@ -100,7 +107,7 @@ const ChinaGeo = ({provienceClick}) => {
         tooltip.style('visibility', 'visible')
           .style('left', `${e.pageX + 10 + 'px'}`)
           .style('top', `${e.pageY + 25 + 'px'}`)
-          .html(`${d.properties.name}<br>面积${d.properties.size || d.properties.adcode % 1000}km²`)
+          .html(`点击查看 <span style="color: #02a6b5">${d.properties.name}</span> 代表公司数据`)
       })
       .on('mouseleave', (e) => {
         d3.select(e.target)
@@ -153,12 +160,12 @@ const ChinaGeo = ({provienceClick}) => {
    */
   const handleSelectChange = (v) => {
     setGeoProjection(v.value)
-    drawGeo(chinaData);
+    // drawGeo(chinaData);
   };
   
   
   return (
-    <div style={{width: 800, height: 600, display: "inline-block", position: 'relative'}}>
+    <div style={{width: 900, height: 600, display: "inline-block", position: 'relative'}}>
       <Dropdown options={[
         {
           content: '墨卡托投影',

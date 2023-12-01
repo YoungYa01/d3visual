@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {useEffect, useState} from "react";
-import BorderCom from "./BorderCom/BorderCom.jsx";
+import BorderCom from "../BorderCom/BorderCom.jsx";
 
 /**
  * App 根组件
@@ -32,8 +32,6 @@ function SportsLotteryTicket() {
       const now = new Date(item.DrawDate)
       return now >= start && now <= end;
     })
-    console.log(`过滤日期${new Date(dataRange[0]).toLocaleString()},${new Date(dataRange[1]).toLocaleString()}`, filterData);
-    // selection(dataset)
     graph(filterData);
   }
   
@@ -174,18 +172,6 @@ function SportsLotteryTicket() {
     d3.select('.ticketContainer svg').remove();
   }
   
-  // function onPick(value, context) {
-  //   console.log('onPick:', value, context);
-  // }
-  
-  function onChange(value, context) {
-    setDataRange(context.dayjsValue.map(d => d.valueOf()));
-    handleDraw(data);
-    // console.log('onChange:', value, context);
-    // console.log('timestamp', context.dayjsValue.map(d => d.valueOf()));
-    // console.log('YYYYMMDD', context.dayjsValue.map(d => d.format('YYYYMMDD')));
-  }
-  
   useEffect(() => {
     d3.csv('./data/Lottery_Powerball_Winning_Numbers__Beginning_2010.csv')
       .then((dataset) => {
@@ -196,14 +182,8 @@ function SportsLotteryTicket() {
   
   return (
     <div style={{color: '#fff'}}>
-      {/*<DateRangePicker defaultValue={['2022-1-1', '2022-12-1']} clearable onChange={onChange}*/}
-      {/*                 disableDate={{before: '09/26/2020', after: '11/15/2023'}}/>*/}
-      {/*<p>{dataRange[0] + ":" + dataRange[1]}</p>*/}
       <BorderCom>
-        
-        {/*<div className="ticketContainer" style={{background: "url(public/images/line.png)"}}>*/}
         <div className="panel-footer"></div>
-        {/*</div>*/}
       </BorderCom>
     
     </div>

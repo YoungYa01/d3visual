@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import {useEffect} from "react";
-import BorderCom from "./BorderCom/BorderCom.jsx";
+import BorderCom from "../BorderCom/BorderCom.jsx";
 
 const RotateCom = () => {
   
@@ -12,8 +12,8 @@ const RotateCom = () => {
   // 创建图表的函数
   function createChart(data) {
     // 设置图表的宽度和高度
-    svgWidth = 425;
-    svgHeight = 800;
+    svgWidth = 900;
+    svgHeight = 195;
     
     // 创建SVG容器
     let svg = d3.select("#chart")
@@ -22,7 +22,7 @@ const RotateCom = () => {
     
     // 创建矩形并绑定数据
     let rects = svg.selectAll("rect")
-      .data(data.slice(0, 18)) // 只使用前6条数据
+      .data(data.slice(0, 5)) // 只使用前6条数据
       .enter()
       .append("rect")
       .attr("y", function (d, i) {
@@ -49,11 +49,11 @@ const RotateCom = () => {
     
     // 在每个矩形上附加文本
     let texts = svg.selectAll("text")
-      .data(data.slice(0, 18))
+      .data(data.slice(0, 5))
       .enter()
       .append("text")
       .text(function (d) {
-        return d.shortName + " " + d.dateTime + " " + d.maxPrice;
+        return `${d.dateTime} ${d.shortName} 开盘价:${d.openPrice} 收盘价:${d.closePrice} 最高价:${d.maxPrice} 最低价:${d.LowestPrice}`;
       })
       .attr("x", svgWidth / 2) // 将文本放在矩形的中心
       .attr("y", function (d, i) {
@@ -93,7 +93,7 @@ const RotateCom = () => {
       // 更新文本内容
       texts.data(data)
         .text(function (d) {
-          return d.shortName + " " + d.dateTime + " " + d.maxPrice;
+          return `${d.dateTime} ${d.shortName} 开盘价:${d.openPrice} 收盘价:${d.closePrice} 最高价:${d.maxPrice} 最低价:${d.LowestPrice}`;
         })
         .attr("y", function (d, i) {
           return i * (45 + 5) + (45 / 2); // 将文本放在矩形的中心
@@ -124,7 +124,7 @@ const RotateCom = () => {
   
   return (
     <BorderCom>
-      <svg height="295px" width="1300px" id="chart" style={{marginLeft:30,marginTop:20}}></svg>
+      <svg id="chart" style={{marginLeft:30,marginTop:20}}></svg>
     </BorderCom>
   )
 }
