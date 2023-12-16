@@ -39,6 +39,10 @@ const tooltip = gen()
  * @constructor
  */
 const TicketCount = ({showProvence}) => {
+  /**
+   * 常量
+   * @type {number}
+   */
   const width = 400;
   const height = 300;
   const marginTop = 20;
@@ -61,13 +65,14 @@ const TicketCount = ({showProvence}) => {
   const drawGraph = (ticker) => {
     remove();
     setFirmName(ticker[0]?.shortName)
+    // 以时间划分的X scale
     const x = d3.scaleTime([d3.min(ticker, function (d) {
       return new Date(d?.dateTime);
     }), d3.max(ticker, function (d) {
       return new Date(d?.dateTime);
     })], [marginLeft, width - marginRight])
-    
-    
+  
+    // 将原始数据（最低价和最高价）的范围映射到指定的范围
     const y = d3.scaleLog()
       .domain([d3.min(ticker, d => d.LowestPrice), d3.max(ticker, d => d.maxPrice)])
       .rangeRound([height - marginBottom, marginTop]);
@@ -77,7 +82,7 @@ const TicketCount = ({showProvence}) => {
       .append("svg")
       .attr("viewBox", [0, 0, width, height]);
     
-    // Append the axes.
+    // X轴
     svg.append("g")
       .attr("transform", `translate(0,${height - marginBottom-100})`)
       .call(d3.axisBottom(x)
@@ -86,7 +91,8 @@ const TicketCount = ({showProvence}) => {
           .range(ticker.at(0)?.dateTime, ticker.at(-1)?.dateTime))
         .tickFormat(d3.utcFormat("%-m/%-d")))
       .call(g => g.select(".domain").remove());
-    
+  
+    // Y轴
     svg.append("g")
       .attr("transform", `translate(${marginLeft},0)`)
       .call(d3.axisLeft(y)
@@ -97,7 +103,7 @@ const TicketCount = ({showProvence}) => {
         .attr("x2", width - marginLeft - marginRight))
       .call(g => g.select(".domain").remove());
     
-    // Create a group for each day of data, and append two lines to it.
+    // 为每天的数据创建一个组，并将两行附加到其中。将数据和选择集进行连接，这样可以根据数据的数量自动创建或移除元素
     const g = svg.append("g")
       .attr("stroke-linecap", "round")
       .attr("stroke", "#fff")
@@ -119,10 +125,10 @@ const TicketCount = ({showProvence}) => {
           .style('left', `${e.pageX + 10 + 'px'}`)
           .style('top', `${e.pageY + 25 + 'px'}`)
           .html(`${d?.dateTime}<br>
-                        Open: ${formatValue(d.openPrice)}<br>
-                        Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})<br>
-                        Low: ${formatValue(d.LowestPrice)}<br>
-                        High: ${formatValue(d.maxPrice)}`)
+                 Open: ${formatValue(d.openPrice)}<br>
+                 Close: ${formatValue(d.closePrice)} (${formatChange(d.openPrice, d.closePrice)})<br>
+                 Low: ${formatValue(d.LowestPrice)}<br>
+                 High: ${formatValue(d.maxPrice)}`)
       })
       .on('mouseleave', (e) => {
         d3.selectAll('.tooltip')
@@ -154,7 +160,7 @@ const TicketCount = ({showProvence}) => {
           .style('visibility', 'hidden')
       })
     
-    // Append a title (tooltip).
+    // 两位小数
     const formatValue = d3.format(".2f");
     const formatChange = ((f) => (y0, y1) => f((y1 - y0) / y0))(d3.format("+.2%"));
     return svg.node();

@@ -23,6 +23,7 @@ const AreaChart = ({showProvence}) => {
    */
   function stackArea(stackData) {
     remove();
+    // 创建一个矩形
     const legend = d3.select("#area_chart")
       .selectAll("rect")
       .data(['最高价', '收盘价', '开盘价', '最低价'])
@@ -56,7 +57,6 @@ const AreaChart = ({showProvence}) => {
       .keys(['maxPrice', 'closePrice', 'openPrice', 'LowestPrice']);
     
     const series = stack(stackData);
-    
     const stackMin = (serie) => d3.min(serie, (d) => d[0]);
     const stackMax = (serie) => d3.max(serie, (d) => d[1]);
     
@@ -65,16 +65,17 @@ const AreaChart = ({showProvence}) => {
       .range([maxHeight, 100])
     
     const xAccessor = (d) => `${d.dateTime}`;
-    
+  
+    // 离散的点比例尺
     const xScale = d3.scalePoint()
       .domain(stackData.map(xAccessor))
       .range([0, maxWidth])
-    
+    // X轴
     const xAxis = d3.axisBottom(d3.scaleBand(stackData.map(d => d.dateTime), [0, maxWidth]))
       .tickValues(xScale.domain().filter((d, i) => i % 30 === 0))
-    
+    // y轴
     const yAxis = d3.axisLeft(d3.scaleLinear([d3.min(series, stackMin), d3.max(series, stackMax)], [maxHeight, 20]))
-    
+    // 面积生成器
     const area = d3.area()
       .x((d) => xScale(xAccessor(d.data)))
       .y0((d) => yScale(d[0]))
@@ -84,7 +85,7 @@ const AreaChart = ({showProvence}) => {
       .append('svg')
       .attr('width', maxWidth)
       .attr('height', maxHeight)
-    
+    // 绘制
     svg.append('g')
       .selectAll('path')
       .data(series)

@@ -10,15 +10,15 @@ import './geo.css'
  * @constructor
  */
 const ChinaGeo = ({provienceClick}) => {
-  
+  // 地图投影方式
   const [geoProjection, setGeoProjection] = useState(`d3.geoMercator()`);
-  
+  // 中国地图数据
   const [chinaData, setChinaData] = useState([]);
-  
+  // 常量
   const margin = {top: 100, left: 100, bottom: 100, right: 100}
   const innerWidth = 600 - margin.left - margin.right
   const innerHeight = 450 - margin.top - margin.bottom
-  
+  // 初始绘图
   useEffect(() => {
     d3.json('./data/china.geojson')
       .then(data => {
@@ -26,7 +26,7 @@ const ChinaGeo = ({provienceClick}) => {
         drawGeo(data);
       })
   }, [])
-  
+  // 监听状态，重绘
   useEffect(() => {
     d3.json('./data/china.geojson')
       .then(data => {
@@ -66,17 +66,20 @@ const ChinaGeo = ({provienceClick}) => {
     const zoom = d3.zoom()
       .scaleExtent([1, 300])  // 设置缩放的范围
       .on("zoom", zoomed);
-    
+    // 鼠标事件
     svg.on('dblclick', () => {
       d3.json('./data/china.geojson')
         .then(data => {
           drawGeo(data);
         })
     })
-    
+    // 传递函数
     svg.call(zoom)
     
-    // 缩放事件处理函数
+    /**
+     * 缩放事件处理函数
+     * @param e:{type: 'zoom', sourceEvent: MouseEvent, transform: Transform, _: Dispatch, target: ƒ()}
+     */
     function zoomed(e) {
       // 获取当前的缩放状态
       const transform = e.transform;
@@ -89,6 +92,7 @@ const ChinaGeo = ({provienceClick}) => {
       
     }
     
+    // tooltip
     const tooltip = createToolTip();
     
     svg.selectAll('path')
@@ -126,7 +130,7 @@ const ChinaGeo = ({provienceClick}) => {
   }
   
   /**
-   *
+   *返回投影方式
    * @return {*}
    */
   const geoProjectionChange = () => eval(geoProjection)

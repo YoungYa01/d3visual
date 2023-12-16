@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import ChinaGeo from "../components/Geo/Geo.jsx";
-import {Button, Layout} from "tdesign-react";
+import {Layout} from "tdesign-react";
 import TicketCount from "../components/TicketCount/TicketCount.jsx";
 import WordCloud from "../components/WordCloud/WordCloud.jsx";
 import BGSvg from "../components/BGSvg/BGSvg.jsx";
@@ -40,7 +40,7 @@ const HomePage = () => {
           }}>{dateNow.toLocaleString()}
           </span>
         </Header>
-        <Content className="content" style={{padding:10}}>
+        <Content className="content" style={{padding: 10}}>
           <BGSvg/>
           <div className="row">
             <div className="clo1" style={{flex: 1}}>

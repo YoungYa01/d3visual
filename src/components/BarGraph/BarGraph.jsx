@@ -60,13 +60,13 @@ const BarGraph = () => {
       .attr("height", svgHeight)
       .style('margin', 20)
     
-    
+    // 添加X轴
     chart.append('g')
       .style('transform', 'translate(60px, -30px)')
       .call(xAxis)
       .attr('stroke', '#fff')
       .attr('stroke-width', 0.4)
-    
+    // 添加Y轴
     chart.append('g')
       .style('transform', `translate(90px, ${svgHeight - 20}px)`)
       .call(yAxis)
@@ -85,9 +85,9 @@ const BarGraph = () => {
     const endIndex = startIndex + 26; // 每秒更新17个数据
     
     const newData = data.slice(startIndex, endIndex);
-    
+    // 先移除之前绘制的，避免前后的图覆盖
     d3.select('.bar_title').remove();
-    
+    // 再绘制新的
     d3.select("#bar_chart")
       .append('g')
       .classed('bar_title', true)
@@ -105,17 +105,20 @@ const BarGraph = () => {
       .join("rect")
       .attr("x", 80)
       .attr("y", (d, i) => i * (rectHeight + rectMargin) - 50)
+    // 已经选好起始坐标，然后添加宽度过渡
     rectangles.transition(d3.transition(d3.easeLinear).duration(1000))
       .attr("width", d => +d.maxPrice * 10) // 初始宽度为0
       .attr("height", rectHeight)
       .attr("fill", "steelblue")
-    rectangles.on("mousemove", (e, d) => {
-      // 鼠标覆盖时显
-      handle().style('visibility', 'visible')
-        .style('left', `${e.pageX + 10 + 'px'}`)
-        .style('top', `${e.pageY + 25 + 'px'}`).text("234345324")
-        .text(d.shortName + ' 开盘价 ' + d.openPrice + ' 最高价 ' + d.maxPrice);
-    })
+    // 添加鼠标事件
+    rectangles
+      .on("mousemove", (e, d) => {
+        // 鼠标覆盖时显
+        handle().style('visibility', 'visible')
+          .style('left', `${e.pageX + 10 + 'px'}`)
+          .style('top', `${e.pageY + 25 + 'px'}`).text("234345324")
+          .text(d.shortName + ' 开盘价 ' + d.openPrice + ' 最高价 ' + d.maxPrice);
+      })
       .on("mouseout", function () {
         // 鼠标移开时移除
         d3.selectAll(".tooltip")
